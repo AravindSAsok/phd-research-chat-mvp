@@ -12,9 +12,9 @@ from pypdf import PdfReader
 
 load_dotenv()
 
-st.set_page_config(page_title="Research Chat", layout="wide")
+st.set_page_config(page_title="Puchki - The Research Chat", layout="wide")
 
-st.title("Research Chat")
+st.title("Puchki - The Research Chat")
 st.caption("Upload research documents and ask questions grounded in their contents.")
 
 
