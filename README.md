@@ -1,4 +1,4 @@
-# PhD Research Chat MVP
+# p!nk — The Research Chat
 
 A small Streamlit app for asking questions about uploaded PDF, DOCX, and TXT research documents with the Gemini API.
 
@@ -24,7 +24,7 @@ Keyword matching is intentionally simple. Check important answers against the or
 Open PowerShell and run these commands from the project folder:
 
 ```powershell
-Set-Location -LiteralPath 'D:\phd-research-chat-mvp'
+Set-Location -LiteralPath 'D:\dummies\phd-research-chat-mvp'
 py -3.12 --version
 py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install --upgrade pip

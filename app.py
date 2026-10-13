@@ -12,31 +12,29 @@ from pypdf import PdfReader
 
 load_dotenv()
 
-st.set_page_config(page_title="Puchki - The Research Chat", layout="wide")
+APP_NAME = "p!nk \u2014 The Research Chat"
 
-st.title("Puchki - The Research Chat")
-st.caption("A focused space for research: clear evidence, with a little icy light.")
+st.set_page_config(page_title=APP_NAME, layout="wide")
+st.title(APP_NAME)
+st.caption("A focused space for rigorous research and clear evidence.")
 
 st.markdown(
     """
     <style>
     :root {
-        --puchki-cream: #fbf8ef;
-        --puchki-ice: #eaf2f7;
-        --puchki-blue: #7898b3;
-        --puchki-silver: #d6dfe7;
-        --puchki-lavender: #b7b2d1;
-        --puchki-ink: #29384a;
-        --puchki-muted: #586678;
+        --pink-primary: #F4A6C1;
+        --pink-rose: #FCE4EC;
+        --page-background: #FFFDFD;
+        --chat-background: #FFFFFF;
+        --text-primary: #000000;
+        --text-secondary: #444444;
+        --pink-border: #E8D5DC;
     }
 
-    .stApp {
-        color: var(--puchki-ink);
-        background: linear-gradient(145deg, var(--puchki-cream) 0%, #f5f8fa 58%, #f3f0f8 100%);
-    }
-
+    .stApp,
     [data-testid="stAppViewContainer"] {
-        background: transparent;
+        color: var(--text-primary);
+        background: var(--page-background);
     }
 
     [data-testid="stHeader"] {
@@ -45,109 +43,171 @@ st.markdown(
 
     .main .block-container {
         max-width: 1120px;
-        padding-top: 2.1rem;
+        padding-top: 2rem;
         padding-bottom: 3rem;
     }
 
+    [data-testid="stAppViewContainer"] :is(h1, h2, h3, h4, h5, h6, p, span, label, li, small, strong, em, blockquote, td, th, summary),
+    [data-testid="stSidebar"] :is(h1, h2, h3, h4, h5, h6, p, span, label, li, small, strong, em, blockquote, td, th, summary),
+    [data-testid="stAlert"] :is(p, span, div, a) {
+        color: var(--text-primary) !important;
+    }
+
     .stApp h1 {
-        color: #2d4055;
+        color: var(--text-primary) !important;
         font-weight: 650;
-        letter-spacing: -0.035em;
+        letter-spacing: -0.03em;
     }
 
     .stApp h1::after {
         content: "  \\2727";
-        color: #9a98bc;
-        font-size: 0.52em;
+        color: var(--pink-primary);
+        font-size: 0.5em;
         vertical-align: 0.2em;
     }
 
     [data-testid="stCaptionContainer"] p {
-        color: var(--puchki-muted);
+        color: var(--text-secondary) !important;
     }
 
     [data-testid="stCaptionContainer"] p::before {
-        content: "\\2744  ";
-        color: #8baec7;
-        font-size: 0.9em;
+        content: "\\2727  ";
+        color: var(--pink-primary);
     }
 
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, var(--puchki-ice) 0%, #f0eef7 72%, var(--puchki-cream) 100%);
-        border-right: 1px solid var(--puchki-silver);
+        background: linear-gradient(180deg, #FCE4EC 0%, #FFF8FA 55%, #FFFDFD 100%);
+        border-right: 1px solid var(--pink-border);
     }
 
     [data-testid="stSidebar"] h2,
     [data-testid="stSidebar"] h3 {
-        color: #34485e;
+        color: var(--text-primary) !important;
+    }
+
+    [data-testid="stFileUploader"],
+    [data-testid="stFileUploader"] * {
+        color: var(--text-primary) !important;
     }
 
     [data-testid="stFileUploader"] section {
-        background: rgba(255, 255, 255, 0.58);
-        border: 1px solid #ccd8e2;
+        background: var(--chat-background);
+        border: 1px solid var(--pink-border);
         border-radius: 14px;
     }
 
-    .stButton > button {
-        color: #35485c;
-        background: rgba(255, 255, 255, 0.66);
-        border: 1px solid var(--puchki-silver);
+    .stButton > button,
+    [data-testid="stBaseButton-secondary"] {
+        color: var(--text-primary) !important;
+        background: var(--chat-background);
+        border: 1px solid var(--pink-border);
         border-radius: 12px;
         transition: background-color 140ms ease, border-color 140ms ease;
     }
 
-    .stButton > button:hover {
-        color: #26394d;
-        background: #eef4f8;
-        border-color: #9eb6ca;
+    .stButton > button:hover,
+    [data-testid="stBaseButton-secondary"]:hover {
+        color: var(--text-primary) !important;
+        background: var(--pink-rose);
+        border-color: var(--pink-primary);
     }
 
     .stButton > button[kind="primary"],
-    .stButton > button[data-testid="stBaseButton-primary"] {
-        color: #ffffff;
-        background: var(--puchki-blue);
-        border-color: var(--puchki-blue);
+    .stButton > button[data-testid="stBaseButton-primary"],
+    [data-testid="stBaseButton-primary"] {
+        color: var(--text-primary) !important;
+        background: var(--pink-primary);
+        border-color: var(--pink-primary);
     }
 
     .stButton > button[kind="primary"]:hover,
-    .stButton > button[data-testid="stBaseButton-primary"]:hover {
-        color: #ffffff;
-        background: #5f7f9c;
-        border-color: #5f7f9c;
+    .stButton > button[data-testid="stBaseButton-primary"]:hover,
+    [data-testid="stBaseButton-primary"]:hover {
+        color: var(--text-primary) !important;
+        background: #EE93B2;
+        border-color: #EE93B2;
     }
 
     [data-testid="stChatMessage"] {
-        background: rgba(255, 255, 255, 0.58);
-        border: 1px solid var(--puchki-silver);
+        color: var(--text-primary) !important;
+        background: var(--chat-background);
+        border: 1px solid var(--pink-border);
         border-radius: 16px;
-        padding: 0.8rem 1rem;
+        padding: 0.85rem 1rem;
+    }
+
+    [data-testid="stChatMessage"] *,
+    [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] *,
+    [data-testid="stChatMessage"] [data-testid="stText"] * {
+        color: var(--text-primary) !important;
+    }
+
+    [data-testid="stChatMessage"] a {
+        color: #222222 !important;
+        text-decoration: underline;
+        text-decoration-color: var(--pink-primary);
+    }
+
+    [data-testid="stChatMessage"] code,
+    [data-testid="stChatMessage"] pre {
+        color: var(--text-primary) !important;
+        background: #FFF8FA;
+        border-color: var(--pink-border);
+    }
+
+    [data-testid="stChatMessage"] th {
+        background: var(--pink-rose);
+    }
+
+    [data-testid="stChatMessage"] table,
+    [data-testid="stChatMessage"] th,
+    [data-testid="stChatMessage"] td {
+        border-color: var(--pink-border);
     }
 
     [data-testid="stChatInput"] {
-        background: rgba(255, 255, 255, 0.72);
-        border: 1px solid #cbd7e1;
+        color: var(--text-primary) !important;
+        background: var(--chat-background) !important;
+        border: 1px solid var(--pink-border) !important;
         border-radius: 14px;
+        box-shadow: 0 2px 10px rgba(120, 70, 90, 0.06);
     }
 
-    [data-testid="stChatInput"] textarea {
-        color: var(--puchki-ink);
+    [data-testid="stChatInput"] textarea,
+    [data-testid="stChatInputTextArea"] {
+        color: #000000 !important;
+        -webkit-text-fill-color: #000000 !important;
+        caret-color: #000000 !important;
+        background: #FFFFFF !important;
+    }
+
+    [data-testid="stChatInput"] textarea::placeholder,
+    [data-testid="stChatInputTextArea"]::placeholder {
+        color: #666666 !important;
+        -webkit-text-fill-color: #666666 !important;
+        opacity: 1;
+    }
+
+    [data-testid="stChatInput"] textarea::selection,
+    [data-testid="stChatInputTextArea"]::selection {
+        color: #000000;
+        background: #FCE4EC;
     }
 
     button:focus-visible,
     textarea:focus-visible,
     input:focus-visible {
-        outline: 3px solid #91aec5 !important;
+        outline: 3px solid #D97E9F !important;
         outline-offset: 2px;
     }
 
     hr {
-        border-color: #d9e0e7;
+        border-color: var(--pink-border);
     }
     </style>
     """,
     unsafe_allow_html=True,
 )
-
 
 def get_secret(name, default=""):
     try:
@@ -276,6 +336,7 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 with st.sidebar:
+    st.markdown(f"**{APP_NAME}**")
     st.header("Your documents")
     uploads = st.file_uploader(
         "Upload PDF, DOCX, or TXT files",
