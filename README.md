@@ -6,13 +6,13 @@ A small Streamlit app for asking questions about uploaded PDF, DOCX, and TXT res
 
 - Accepts multiple PDF, DOCX, and TXT files in one session.
 - Extracts PDF page text and keeps page numbers for source references. Scanned PDFs need OCR, which is not included.
-- Uses lightweight keyword matching to select excerpts before asking Gemini for an answer.
+- Ranks excerpts with lightweight keyword and topic synonyms, using recent completed turns to resolve short follow-up questions.
 - Says when no relevant text was found. The answer prompt also tells Gemini to state when retrieved excerpts do not provide enough evidence.
 - Converts valid source IDs into filenames and PDF page references, and lists the sources from the retrieved excerpts.
 - Keeps uploads and extracted text in the Streamlit session; this app does not save them to an application database.
 - Reads `GEMINI_API_KEY` from `.env` or Streamlit Secrets. The key is never included in app source code.
 
-Keyword matching is intentionally simple. Check important answers against the original documents.
+Retrieval is lightweight and document-grounded. Check important answers against the original documents.
 
 ## Requirements
 
@@ -57,6 +57,16 @@ GEMINI_MODEL = "gemini-3.8-flash"
 ```
 
 The `.env` file and `.streamlit/secrets.toml` are excluded by `.gitignore`. Keep the actual key in only one local configuration location.
+
+## Automated regression tests
+
+Run this in PowerShell from the project folder:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+These tests mock Gemini calls and do not need or print an API key.
 
 ## Test the running app
 
