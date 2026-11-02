@@ -1,0 +1,28 @@
+
+name: Keep Streamlit App Active
+
+on:
+  schedule:
+    - cron: '0 * * * *' # Every hour (UTC)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Create empty commit
+        run: |
+          git commit --allow-empty -m "chore: scheduled keep-alive"
+          git push
