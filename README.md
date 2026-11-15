@@ -1,3 +1,6 @@
+<p align="center"><strong>Research chat that answers from your uploaded documents, with source-aware retrieval.</strong></p>
+<p align="center"><img alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white" /> <img alt="Streamlit" src="https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=white" /> <img alt="Google Gemini" src="https://img.shields.io/badge/Google%20Gemini-GenAI-8E75B2?logo=googlegemini&logoColor=white" /> <img alt="Tests" src="https://img.shields.io/badge/Tests-Unittest-3776AB?logo=python" /></p>
+
 # p!nk — The Research Chat
 
 A small Streamlit app for asking questions about uploaded PDF, DOCX, and TXT research documents with the Gemini API.
@@ -13,6 +16,20 @@ A small Streamlit app for asking questions about uploaded PDF, DOCX, and TXT res
 - Reads `GEMINI_API_KEY` from `.env` or Streamlit Secrets. The key is never included in app source code.
 
 Retrieval is lightweight and document-grounded. Check important answers against the original documents.
+
+## Retrieval flow
+
+~~~mermaid
+flowchart TD
+  F[PDF / DOCX / TXT uploads] --> EX[Local text extraction]
+  EX --> CH[Page-aware chunks]
+  Q[User question] --> RET[Keyword and topic retrieval]
+  CH --> RET
+  RET -->|Relevant excerpts| G[Gemini answer generation]
+  RET -->|No evidence| N[Abstain with no unsupported answer]
+  G --> SRC[Resolve trusted source IDs]
+  SRC --> A[Answer with filename and page references]
+~~~
 
 ## Requirements
 
